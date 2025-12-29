@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1051760042290",
+    "project_id": "qpi-app",
+    "storage_bucket": "qpi-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051760042290:android:126513d44daecaf06bf72b",
+        "android_client_info": {
+          "package_name": "com.example.qpi_eng"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByizCROmVKZRWkAkDpC1-9RbPq7Mndi3E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
