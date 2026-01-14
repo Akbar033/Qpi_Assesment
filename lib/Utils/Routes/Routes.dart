@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:qpi_eng/Bar_Scanner/BarCodeScanner.dart';
 import 'package:qpi_eng/Utils/Routes/RoutesName.dart';
 import 'package:qpi_eng/test/scannerscreen.dart';
+import 'package:qpi_eng/views/preventive%20history/PrevenHistory.dart';
+import 'package:qpi_eng/views/Create%20User/CreateUser.dart';
 import 'package:qpi_eng/views/HomeScreen/HomeScreen.dart';
-import 'package:qpi_eng/views/bar_code_generator/barcode_generator.dart';
+import 'package:qpi_eng/views/Pending%20Maintenance/PenMaintenance.dart';
+import 'package:qpi_eng/views/Preventive%20Maintenance/PrevenMaintenance.dart';
+import 'package:qpi_eng/views/admin%20dashboard/AdminDashboard.dart';
+
+import 'package:qpi_eng/views/corre%20Mainten/CRM.dart';
+
 import 'package:qpi_eng/views/login/Login.dart';
 import 'package:qpi_eng/views/signup/Signup.dart';
 import 'package:qpi_eng/views/splash_Screen/splashScree.dart';
@@ -32,24 +39,36 @@ class Routes {
           builder: (BuildContext contex) => const ScannerScreen(),
         );
 
-      case RoutesNames.addProductScreen:
+      case RoutesNames.prevenMn:
         return MaterialPageRoute(
-          builder: (BuildContext contex) => AddProductScreen(),
+          builder: (BuildContext contex) => PreventiveMaintenance(),
         );
-
-      /* case RoutesNames.barcodeGenerator:
-        return MaterialPageRoute(builder: (_) => const BarcodeGenerator());*/
-
       case RoutesNames.scanBarCode:
         return MaterialPageRoute(
           //app need
           builder: (BuildContext contex) => BarcodeScanner(),
         );
-
+      //create user by admin
+      case RoutesNames.createUser:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => CreateUser(),
+        );
+      //corrective maintenance history
+      case RoutesNames.prevenMnHistory:
+        return MaterialPageRoute(builder: (cotext) => PrevenMnHistory());
+      //pending maintenance
+      case RoutesNames.pendingMaintenance:
+        return MaterialPageRoute(builder: (context) => PendingMaintenance());
+      //admin dashboard
+      case RoutesNames.adminDashboard:
+        return MaterialPageRoute(builder: (context) => Admindashboard());
+      //corrective maintence route  route
+      case RoutesNames.correctiveMaintenance:
+        return MaterialPageRoute(
+          builder: (context) => CreateCorrectiveMaintenance(),
+        );
       default:
         return MaterialPageRoute(builder: (_) => Homescreen());
     }
-
-    //default case if there is no such route
   }
 }

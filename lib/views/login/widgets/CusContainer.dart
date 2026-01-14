@@ -1,7 +1,12 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
-import 'package:qpi_eng/Utils/Routes/RoutesName.dart';
+import 'package:qpi_eng/views/HomeScreen/HomeScreen.dart';
+
+import 'package:qpi_eng/views/admin%20dashboard/AdminDashboard.dart';
 
 class CusContainer extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -18,13 +23,23 @@ class _CusContainerState extends State<CusContainer> {
   FirebaseAuth auth = FirebaseAuth.instance;
   //login
   Future<bool> login(String email, String password) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
     try {
-      final userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      return userCredential.user != null;
+      UserCredential credential = await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      log("this is user details✔✔${auth.currentUser!.uid}");
+      return true;
     } on FirebaseAuthException catch (e) {
-      print(e.code);
-      //if wrong data enter it show massage
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('firebase error occured sorry')));
+      print('firebase error❌ $e');
+      return false;
+    } catch (e) {
+      print('other error❌ $e');
       return false;
     }
   }
@@ -71,27 +86,33 @@ class _CusContainerState extends State<CusContainer> {
                 SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () async {
-                    if (widget.formKey.currentState!.validate()) {
-                      bool success = await login(
-                        emailController.text.trim(),
-                        passController.text.trim(),
-                      );
-
-                      if (success) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Login successfully')),
-                        );
-
-                        Navigator.pushNamed(context, RoutesNames.home);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Invalid email or password'),
-                          ),
-                        );
+                    bool success = await login(
+                      emailController.text.trim(),
+                      passController.text.trim(),
+                    );
+                    if (success) {
+                      final uid = FirebaseAuth.instance.currentUser!.uid;
+                      final doc = await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(uid)
+                          .get();
+                      if (doc.exists) {
+                        final data = doc.data()!;
+                        if (data['role'] == 'admin') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => Admindashboard()),
+                          );
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => Homescreen()),
+                          );
+                        }
                       }
                     }
                   },
+
                   child: const Text('Login'),
                 ),
               ],

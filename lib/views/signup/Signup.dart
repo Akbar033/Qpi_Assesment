@@ -43,6 +43,15 @@ class Signup extends StatelessWidget {
                     ],
                   ),
                 ),
+
+                SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    'create your admin account\nthe admin account have \nauthority to create user and more',
+                  ),
+                ),
+
                 SizedBox(height: 30),
                 Signupform(),
 

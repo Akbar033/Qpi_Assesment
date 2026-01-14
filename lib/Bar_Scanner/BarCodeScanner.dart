@@ -129,7 +129,7 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
             const SizedBox(height: 20),
 
             /// 🔹 LOADING
-            if (isLoading) const CircularProgressIndicator(),
+            if (isLoading) Center(child: const CircularProgressIndicator()),
 
             /// 🔹 ERROR MESSAGE
             if (errorMessage.isNotEmpty)

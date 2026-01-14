@@ -1,3 +1,5 @@
+//universal scanner api
+
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qpi_eng/services/product_services.dart';

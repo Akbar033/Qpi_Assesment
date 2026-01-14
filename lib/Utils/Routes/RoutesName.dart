@@ -9,7 +9,17 @@ class RoutesNames {
   static const String barcodeGenerator = '/barcode-generator';
   //add productscreen route
 
-  static const String addProductScreen = '/add_product_screen';
+  static const String prevenMn = '/preventive-maintenance';
   //barcode scanner form firestore
   static const String scanBarCode = '/barcode_from_firestore';
+  // create user route
+  static const String createUser = '/createUserRoute';
+  //corrective miantenance history route
+  static const String prevenMnHistory = '/preventive maintenance history';
+  //pending maintenance
+  static const String pendingMaintenance = '/pending-maintenance';
+  // admin dadshborad route
+  static const String adminDashboard = '/admin-dashboard';
+  //corrective maintenance route
+  static const String correctiveMaintenance = '/corrective-maintenance';
 }

@@ -33,10 +33,9 @@ class _CorrectiveMaintananceState extends State<CorrectiveMaintanance> {
     'start_date': {'maintenance_date': '', 'maintenance_comment': ''},
     'end_date': {'maintenance_end_date': '', 'end_date_comment': ''},
     'Description': {'report_description': '', 'Complete Description': ''},
-    'timeCreation': {
-      'created_at'
-          '${Timestamp.now()}',
-    },
+    // 'timeCreation': {
+    //   'created_at': FieldValue.serverTimestamp(),
+    // },
   };
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   //void add data

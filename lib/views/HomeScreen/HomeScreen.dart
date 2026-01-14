@@ -1,235 +1,74 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qpi_eng/Utils/Routes/RoutesName.dart';
-import 'package:qpi_eng/views/corrective%20maiantance/CorrectiveMaintance.dart';
+import 'package:qpi_eng/viewmodel/adminiDashoboard/AdminVm.dart';
+import 'package:qpi_eng/views/HomeScreen/widgets/HomeWidgets/UserWelcomeText.dart';
+import 'package:qpi_eng/views/admin%20dashboard/widgets/admin%20Drawer/drawer.dart';
+import 'package:qpi_eng/views/admin%20dashboard/widgets/realisticCard.dart';
 
 class Homescreen extends StatelessWidget {
   const Homescreen({super.key});
 
-  // 🔹 Small helper inside SAME class
-  Widget infoRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 4,
-            child: Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-          Expanded(
-            flex: 6,
-            child: Text(
-              value.isEmpty ? '-' : value,
-              style: const TextStyle(fontSize: 12),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<Adminvm>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Maintenance Records'),
-        actions: [
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.barcode_reader),
-                onPressed: () {
-                  Navigator.pushNamed(context, RoutesNames.scanBarCode);
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () {
-                  Navigator.pushNamed(context, RoutesNames.addProductScreen);
-                },
-              ),
-              //IconButton(icon: const Icon(Icons.refresh), onPressed: () {}),
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => CorrectiveMaintanance()),
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('maintanance_data')
-            .orderBy('created_at', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          // 🔹 Loading
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          // 🔹 Error
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          // 🔹 Empty
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No maintenance data found'));
-          }
-
-          final docs = snapshot.data!.docs;
-
-          return ListView.builder(
-            itemCount: docs.length,
-            itemBuilder: (context, index) {
-              final data = docs[index].data() as Map<String, dynamic>;
-
-              return Card(
-                margin: const EdgeInsets.all(10),
-                elevation: 3,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Maintenance Record',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      const Divider(),
-
-                      // 🔹 TYPE
-                      infoRow('Device Type', data['type']?['deviceType'] ?? ''),
-                      infoRow(
-                        'Malfunction Type',
-                        data['type']?['malfunctiontype'] ?? '',
-                      ),
-                      infoRow('Type Reason', data['type']?['reason'] ?? ''),
-
-                      const Divider(),
-
-                      // 🔹 MACHINE STATUS
-                      infoRow(
-                        'Fault Stop Machine',
-                        (data['machine status']?['fault stop machine'] ?? false)
-                            ? 'Yes'
-                            : 'No',
-                      ),
-                      infoRow(
-                        'Stop Reason',
-                        data['machine status']?['reason why stop machine'] ??
-                            '',
-                      ),
-
-                      const Divider(),
-
-                      // 🔹 MALFUNCTION REASON
-                      infoRow(
-                        'Malfunction Reason',
-                        data['malfunction reason']?['reason'] ?? '',
-                      ),
-                      infoRow(
-                        'Malfunction Comment',
-                        data['malfunction reason']?['malfunction comment'] ??
-                            '',
-                      ),
-
-                      const Divider(),
-
-                      // 🔹 FAULT FIXED
-                      infoRow(
-                        'Fault Fixed',
-                        (data['fault fixed']?['is_fault_fixed'] ?? false)
-                            ? 'Yes'
-                            : 'No',
-                      ),
-                      infoRow(
-                        'Fault Fixed Comment',
-                        data['fault fixed']?['fault_fixed_comment'] ?? '',
-                      ),
-
-                      const Divider(),
-
-                      // 🔹 SPARE PARTS
-                      infoRow(
-                        'Spare Parts Used',
-                        (data['Spare_parts']?['spare_parts_used'] ?? false)
-                            ? 'Yes'
-                            : 'No',
-                      ),
-                      infoRow(
-                        'Spare Parts Comment',
-                        data['Spare_parts']?['sprareparts_comment'] ?? '',
-                      ),
-
-                      const Divider(),
-
-                      // 🔹 START DATE
-                      infoRow(
-                        'Start Date',
-                        data['start_date']?['maintenance_date'] ?? '',
-                      ),
-                      infoRow(
-                        'Start Comment',
-                        data['start_date']?['maintenance_comment'] ?? '',
-                      ),
-
-                      const Divider(),
-
-                      // 🔹 END DATE
-                      infoRow(
-                        'End Date',
-                        data['end_date']?['maintenance_end_date'] ?? '',
-                      ),
-                      infoRow(
-                        'End Comment',
-                        data['end_date']?['end_date_comment'] ?? '',
-                      ),
-
-                      const Divider(),
-
-                      // 🔹 DESCRIPTION
-                      infoRow(
-                        'Report Description',
-                        data['Description']?['report_description'] ?? '',
-                      ),
-                      infoRow(
-                        'Complete Description',
-                        data['Description']?['Complete Description'] ?? '',
-                      ),
-
-                      const Divider(),
-
-                      // 🔹 CREATED AT
-                      if (data['created_at'] != null)
-                        Text(
-                          'Created: ${(data['created_at'] as Timestamp).toDate()}',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
+      appBar: AppBar(),
+      drawer: AdminDrawer(
+        drawerFunc: () {
+          vm.logOut(context);
         },
+      ),
+
+      body: Center(
+        child: SafeArea(
+          child: Card(
+            elevation: 10,
+            color: Colors.white,
+            child: Container(
+              height: MediaQuery.sizeOf(context).height * 0.9,
+              width: MediaQuery.sizeOf(context).width * 0.9,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 0.1,
+                    color: const Color.fromARGB(0, 230, 227, 227),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Userwelcometext(),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
+                  RealisticCard(
+                    color: const Color.fromARGB(255, 148, 179, 204),
+                    title: ' Preventive maintenance ',
+                    onTap: () {
+                      Navigator.pushNamed(context, RoutesNames.prevenMn);
+                    },
+                    icon: Icons.create,
+                  ),
+                  SizedBox(height: 20),
+                  RealisticCard(
+                    title: 'Preventive History',
+                    onTap: () {
+                      Navigator.pushNamed(context, RoutesNames.prevenMnHistory);
+                    },
+                    icon: Icons.history,
+                    color: const Color.fromARGB(255, 235, 196, 229),
+                  ),
+                  SizedBox(height: 20),
+                  RealisticCard(
+                    title: 'Scan barcode',
+                    onTap: () {},
+                    icon: Icons.scanner,
+                    color: const Color.fromARGB(255, 208, 177, 177),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

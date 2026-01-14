@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:qpi_eng/Utils/Routes/RoutesName.dart';
 
@@ -17,16 +18,16 @@ class _SignupformState extends State<Signupform> {
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final passController = TextEditingController();
-  //final idController = TextEditingController();
+  final adminController = TextEditingController();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
-  //create account
-  Future<void> createAccount(
+  //create adminaccount
+  Future<void> createAdmin(
     String email,
     String password,
     String name,
     String lastTime,
-    // int id,
+    String role,
   ) async {
     try {
       UserCredential credential = await auth.createUserWithEmailAndPassword(
@@ -40,10 +41,12 @@ class _SignupformState extends State<Signupform> {
           'password': password,
           'name': name,
           'last name': lastTime,
-          // 'id number': id,
+          'role': 'admin',
         });
         print(user);
       }
+    } on FirebaseAuthException catch (e) {
+      print('error is occured❌❌$e');
     } catch (e) {
       e.toString();
     }
@@ -121,18 +124,17 @@ class _SignupformState extends State<Signupform> {
                     //logic for validation if fields are correct
                     onPressed: () {
                       if (widget.formKey.currentState!.validate()) {
-                        createAccount(
+                        createAdmin(
                           emailController.text.trim(),
                           passController.text.trim(),
                           nameController.text.trim(),
                           lastNameController.text.trim(),
+                          'admin',
                         );
+
                         Navigator.pushNamed(context, RoutesNames.login);
                         // If the form is valid, display a snackbar. In a real app,
                         // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Processing Data')),
-                        );
                       }
                     },
                     child: Text('Register'),
